@@ -1,0 +1,86 @@
+{
+    "questions": {
+        "1": [
+            {
+                "id": 1,
+                "equation": "2 + x = 5",
+                "answer": 3
+            },
+            {
+                "id": 2,
+                "equation": "3x = 9",
+                "answer": 3
+            },
+            {
+                "id": 3,
+                "equation": "7 - y = 3",
+                "answer": 4
+            },
+            {
+                "id": 4,
+                "equation": "x + 4 = 9",
+                "answer": 5
+            },
+            {
+                "id": 5,
+                "equation": "2x + 3 = 11",
+                "answer": 4
+            }
+        ],
+        "2": [
+            {
+                "id": 6,
+                "equation": "2x + y = 10",
+                "answer": 3
+            },
+            {
+                "id": 7,
+                "equation": "4x - 3y = 5",
+                "answer": 4
+            },
+            {
+                "id": 8,
+                "equation": "3x + 2y = 16",
+                "answer": 4
+            },
+            {
+                "id": 9,
+                "equation": "2x - y = 8",
+                "answer": 4
+            },
+            {
+                "id": 10,
+                "equation": "x + y = 7",
+                "answer": 4
+            }
+        ],
+        "3": [
+            {
+                "id": 11,
+                "equation": "3x - 2y = 4",
+                "answer": 3
+            },
+            {
+                "id": 12,
+                "equation": "2x^2 + 3y = 11",
+                "answer": 2
+            },
+            {
+                "id": 13,
+                "equation": "4x + 2y = 14",
+                "answer": 3
+            },
+            {
+                "id": 14,
+                "equation": "x^2 - y = 3",
+                "answer": 2
+            },
+            {
+                "id": 15,
+                "equation": "3x + 4y = 22",
+                "answer": 4
+            }
+        ]
+    }
+}
+

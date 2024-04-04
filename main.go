@@ -1,85 +1,115 @@
 package main
 
 import (
-	"encoding/csv"
+	"encoding/json"
 	"errors"
 	"fmt"
+	"io"
 	"os"
-   // "strconv"
+	"strconv"
 )
 
-func menu() (uint8, error) {
+func menu() (int, error) {
+	var choice int
 
-	var choice uint8
-
-	fmt.Println("-- Chose a level of questions --")
+	fmt.Println("-- Choose a level of questions --")
 	fmt.Println()
-
 	fmt.Println("Level 1")
 	fmt.Println("Level 2")
 	fmt.Println("Level 3")
 
-	fmt.Scanln(&choice)
+	_, err := fmt.Scanln(&choice)
+	if err != nil {
+		return 0, err
+	}
+
 	if choice > 3 || choice < 1 {
-		return 0, errors.New("Invalid level choice\n")
+		return 0, errors.New("Invalid level choice")
 	}
 
 	return choice, nil
-
 }
 
-type question struct {
-	expression string
-	answer     int
-	difficulty uint8
+type Questions struct {
+	Questions map[string][]Question `json:"questions"`
 }
 
-func loadLevel(dif uint8) (bool){
+type Question struct {
+	ID       int    `json:"id"`
+	Equation string `json:"equation"`
+	Answer   int    `json:"answer"`
+}
 
-    fmt.Printf("--- Level %d ---\n", dif)
+func loadLevel(dif int) error {
+	difStr := strconv.Itoa(dif)
 
-	data, err := os.Open("./db/equations.csv")
+    fmt.Println()
+
+	fmt.Printf("--- Level %d ---\n", dif)
+
+	file, err := os.Open("questions.json")
 	if err != nil {
-		fmt.Println("Error opening CSV file:", err)
-		return false
+		return errors.New("Error opening the JSON file")
 	}
-	defer data.Close()
+	defer file.Close()
 
-	reader := csv.NewReader(data)
-
-	lines, err := reader.ReadAll()
+	bytes, err := io.ReadAll(file)
 	if err != nil {
-		fmt.Println("Error reading CSV file:", err)
-		return false
+		return errors.New("Error while reading the JSON file")
 	}
 
-    for _, linha := range lines {
-        fmt.Println(linha)
-    }
+	var questions Questions
+	if err := json.Unmarshal(bytes, &questions); err != nil {
+		return errors.New("Error decoding the JSON")
+	}
 
-    fmt.Println("---------------")
+	qs, ok := questions.Questions[difStr]
+	if !ok {
+		return fmt.Errorf("No questions found for difficulty %d", dif)
+	}
 
-    return true
+	var score int
 
+	for _, q := range qs {
+		var answer int
 
-	return true
+		fmt.Println()
+		fmt.Printf(q.Equation + ": ")
+
+		_, err := fmt.Scanln(&answer)
+		if err != nil {
+			return errors.New("Invalid input")
+		}
+
+		if answer != q.Answer {
+			fmt.Printf("Incorrect! The correct answer is %d\n", q.Answer)
+		} else {
+			fmt.Println("Correct!")
+			score++
+		}
+	}
+
+	fmt.Println("---------------")
+	fmt.Printf("You got a score of %d\n", score)
+
+	return nil
 }
-
 
 func main() {
-
-	fmt.Println("----------- welcome to Eureka, a equation quiz! ----------")
+	fmt.Println("----------- Welcome to Eureka, an equation quiz! ----------")
 	fmt.Println()
 
 	for {
-
 		choice, err := menu()
 		if err != nil {
 			fmt.Println(err)
 			continue
 		}
 
-		loadLevel(choice)
+		err = loadLevel(choice)
+		if err != nil {
+			fmt.Println(err)
+		}
 
 		fmt.Println("\nDo you want to play again? (y/n)")
 		var playAgain string
@@ -87,8 +117,8 @@ func main() {
 		if playAgain != "y" {
 			break
 		}
-
 	}
 
-	fmt.Printf("\nThank you for playing Eureka!\n")
+	fmt.Println("\nThank you for playing Eureka!")
 }
+

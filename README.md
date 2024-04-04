@@ -7,7 +7,3 @@ It presents a series of mathematical equations at different difficulty levels an
 The user can choose the difficulty level from a menu before starting the quiz.
 
 
-## To do
-
-- [x] Get data from csv file instead of posgres
-
